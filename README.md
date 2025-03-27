@@ -16,10 +16,10 @@ Go로 만든 URL 단축생성기 **Go2**
 - [TailwindCSS](https://tailwindcss.com/)
 
 # 빌드
-1. redis다운로드 후 시작해주세요.
+1. [Redis](https://redis.io/) 다운로드 후 시작해주세요.
 > `redis-server` 또는 `brew services start redis`
 
-2. 환경변수 설정
+2. 환경변수 설정  
 `.env.example`을 `.env`로 변경
 ```env
 REDIS_HOST="localhost:6379"
@@ -31,12 +31,14 @@ URL_LENGTH=7
 > `go mod tidy`
 
 4. 시작 또는 빌드하기
-> `go run .`
-또는 
+> `go run .`  
+또는  
 > `go build` 후 `./go2`
 
 ## redis 서버 수동 확인하기
 서버를 먼저 시작해주세요.
+
+redis-cli로 들어간다음에,
 ```sh
 # 키 검색
 keys *
