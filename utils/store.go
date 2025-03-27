@@ -4,17 +4,16 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/go-redis/redis/v8"
 )
 
 func NewRedisClient() *redis.Client {
-	log.Println("redis 서버 연결중: ", os.Getenv("REDIS_HOST"))
+	log.Println("redis 서버 연결중: ", ReadEnv("REDIS_HOST"))
 
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_HOST"),
-		Password: os.Getenv("REDIS_PASSWORD"),
+		Addr:     ReadEnv("REDIS_HOST"),
+		Password: ReadEnv("REDIS_PASSWORD"),
 		DB:       0,
 	})
 
@@ -22,9 +21,7 @@ func NewRedisClient() *redis.Client {
 }
 
 func SetKey(ctx *context.Context, rdb *redis.Client, key string, value string, ttl int) {
-	log.Println("REDIS key: ", key, ", value: ", value)
 	rdb.Set(*ctx, key, value, 0)
-	log.Println("키 설정 완료")
 }
 
 func GetOriginURL(ctx *context.Context, rdb *redis.Client, shortURL string) (string, error) {

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 
@@ -22,22 +23,43 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(writer http.ResponseWriter, req *http.Request) {
-		fmt.Fprintln(writer, "URL 단축 사이트 Go2 입니다.")
+		tmpl := template.Must(template.ParseFiles("templates/index.html"))
+		tmpl.Execute(writer, nil)
 	})
 
 	http.HandleFunc("/go2", func(writer http.ResponseWriter, req *http.Request) {
 		url := req.FormValue("url")
-		log.Println("Payload: ", url)
+		log.Println("요청 URL: ", url)
 
 		shortCode := utils.ShortCode(url)
-		shortURL := fmt.Sprintf("http://localhost:8080/g/%s", shortCode)
-		log.Println("짧은 URL 생성: ", shortURL)
+		shortURL := fmt.Sprintf("http://localhost:8080/go2/%s", shortCode)
+		log.Print("생성 URL: ", shortURL, "\n\n")
 
-		utils.SetKey(&ctx, dbClient, shortURL, url, 0)
+		utils.SetKey(&ctx, dbClient, shortCode, url, 0)
 		fmt.Fprintf(writer,
-			`<p class="mt-4 text-green-600">Shortened URL: <a href="/r/%s" class="underline">%s</a></p>`, shortURL, shortURL)
+			`<p class="mt-4 text-green-600">짧은 URL: <a href="/go2/%s" class="underline">%s</a></p>`, shortCode, shortURL)
 	})
 
+	http.HandleFunc("/go2/{code}", func(writer http.ResponseWriter, req *http.Request) {
+		code := req.PathValue("code")
+		if code == "" {
+			http.Error(writer, "URL이 없습니다.", http.StatusBadRequest)
+			return
+		}
+
+		originURL, err := utils.GetOriginURL(&ctx, dbClient, code)
+		if err != nil {
+			log.Println("err: ", err)
+			http.Error(writer, "해당 URL은 없습니다.", http.StatusNotFound)
+			return
+		}
+
+		log.Println("originURL: ", originURL)
+		http.Redirect(writer, req, originURL, http.StatusPermanentRedirect)
+	})
+
+	// 서버 시작
 	log.Println("http://localhost:8080 서버 온")
+	log.Println("===========================\n")
 	http.ListenAndServe(":8080", nil)
 }
