@@ -10,7 +10,7 @@ Go로 만든 URL 단축생성기 **Go2**
 4. 사용자는 `단축시킨 URL`을 입력하면 `원래 URL`으로 리다이렉트 해준다.
 
 # 사용한 기술
-- [Go](https://go.dev/) (http, hash 등)
+- [Go](https://go.dev/) (http, hash, base64 등)
 - [Redis](https://redis.io/)
 - [htmx](https://htmx.org/)
 - [TailwindCSS](https://tailwindcss.com/)
