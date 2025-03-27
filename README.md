@@ -1,8 +1,7 @@
 # Go2
 Go로 만든 URL 단축생성기 **Go2**  
 
-<img src="image.png" width="30%">
-<img src="image-2.png" width="65%">
+<img src="image.png" width="30%"><img src="image-2.png" width="65%">
 
 # 간단 원리
 1. 사용자가 단축하고 싶은 URL을 입력한다.
